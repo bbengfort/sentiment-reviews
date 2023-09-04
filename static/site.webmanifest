@@ -1,0 +1,12 @@
+{
+  "short_name": "Reviews",
+  "name": "Sentiment Reviews",
+  "icons": [{
+    "src": "icon.png",
+    "type": "image/png",
+    "sizes": "256x256"
+  }],
+  "start_url": "/?utm_source=homescreen",
+  "background_color": "#fafafa",
+  "theme_color": "#fafafa"
+}

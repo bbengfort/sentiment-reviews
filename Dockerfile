@@ -14,7 +14,7 @@ RUN apk del .tmp-build-deps
 
 RUN mkdir /app
 WORKDIR /app
-COPY . .
+COPY ./ ./
 
 RUN adduser -D django
 USER django

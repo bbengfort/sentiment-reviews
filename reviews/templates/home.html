@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h1 class="my-4">Sentiment Reviews</h1>
+
+      <!-- Reviews form handled by app.js -->
+      <form>
+        <div class="form-group">
+          <label for="review_input">Add your Review:</label>
+          <textarea class="form-control" id="reviewInput" name="review_input" rows="4" maxlength="300"></textarea>
+          <small id="charsCounter" class="form-text text-muted text-right"><span id="currentCount">0</span><span id="maximumCount"> / 300</span></small>
+        </div>
+        <div style="margin-top: -2em;">
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="reset" class="btn btn-secondary">Clear</button>
+        </div>
+        {% csrf_token %}
+      </form>
+
+      <!-- Reviews div populated by app.js -->
+      <div id="reviews"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
