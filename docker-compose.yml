@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - SECRET_KEY="9d#y46+z9*iwrwnpjs*(ynv8=c2oub1tt!(+syt6ga6u#esw1e"
+      - PGDATABASE=sentiment_reviews
+      - PGUSER=django
+      - PGPASSWORD=supersecretsquirrel
+      - PGHOST=db
+      - PGPORT=5433
+    depends_on:
+      - db
+    command: >
+      sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=sentiment_reviews
+      - POSTGRES_USER=django
+      - POSTGRES_PASSWORD=supersecretsquirrel
+    expose:
+      - "5433"
+    ports:
+      - "5433:5433"
+    command: -p 5433
+
+volumes:
+  pgdata:
