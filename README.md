@@ -18,7 +18,7 @@ You should now be able to navigate to http://localhost:8000/ and see the app run
 The model was trained on the [Kaggle Twitter US Airline Sentiment](https://www.kaggle.com/datasets/crowdflower/twitter-airline-sentiment?resource=download) dataset. The confusion matrix for the model is below:
 
 ```
-precision    recall  f1-score   support
+                precision    recall  f1-score   support
 
          NEG       0.81      0.93      0.86      1818
          NEU       0.64      0.47      0.54       620
