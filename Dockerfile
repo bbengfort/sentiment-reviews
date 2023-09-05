@@ -1,20 +1,23 @@
-FROM python:3.11-alpine
+FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED 1
 
+RUN apt-get update --yes
+RUN apt-get install --yes postgresql-client
+RUN apt-get install --yes gcc libc-dev build-essential libpq-dev python3-dev
+
+RUN groupadd -r django && useradd -m -r -g django django
+USER django
+
+RUN mkdir /home/django/app
+WORKDIR /home/django/app
+
 COPY ./requirements.txt /requirements.txt
-
-RUN apk add --update --no-cache postgresql-client
-RUN apk add --update --no-cache --virtual .tmp-build-deps \
-    gcc libc-dev linux-headers postgresql-dev
-
 RUN pip install -r /requirements.txt
 
-RUN apk del .tmp-build-deps
-
-RUN mkdir /app
-WORKDIR /app
-COPY ./ ./
-
-RUN adduser -D django
+USER root
+RUN apt-get clean autoclean
+RUN apt-get autoremove --yes
 USER django
+
+COPY ./ ./
