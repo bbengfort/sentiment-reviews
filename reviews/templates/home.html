@@ -5,12 +5,13 @@
   <div class="row">
     <div class="col-md-6 offset-md-3">
       <h1 class="my-4">Sentiment Reviews</h1>
+      <div id="alerts"></div>
 
       <!-- Reviews form handled by app.js -->
       <form>
         <div class="form-group">
-          <label for="review_input">Add your Review:</label>
-          <textarea class="form-control" id="reviewInput" name="review_input" rows="4" maxlength="300"></textarea>
+          <label for="text">Add your Review:</label>
+          <textarea class="form-control" id="text" name="text" rows="4" maxlength="300"></textarea>
           <small id="charsCounter" class="form-text text-muted text-right"><span id="currentCount">0</span><span id="maximumCount"> / 300</span></small>
         </div>
         <div style="margin-top: -2em;">
@@ -21,8 +22,40 @@
       </form>
 
       <!-- Reviews div populated by app.js -->
-      <div id="reviews"></div>
+      <div id="reviews" class="my-5"></div>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block templates %}
+  <script type="text/template" id="alertTemplate">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <%= msg %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </script>
+
+  <script type="text/template" id="reviewsTemplate">
+    <% _(results).each(function(review) { %>
+      <div class="card my-2">
+        <div class="card-body">
+          <h6 class="card-title">Review <%- review.id %> posted <%= getRelativeTime(new Date(review.created)) %></h6>
+          <p class="card-text"><%- review.text %></p>
+          <div class="d-flex justify-content-between">
+            <small class="card-text d-inline-flex">
+              Polarity&nbsp;&nbsp; <span class="<%= polarityClass(review.polarity) %>"><%= polarityText(review.polarity) %></span>
+            </small>
+            <% if (review.polarity != 'UNK') { %>
+            <small class="card-text d-inline-flex">
+              Confidence <%= review.confidence.toFixed(4) %>
+            </small>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </script>
 {% endblock %}

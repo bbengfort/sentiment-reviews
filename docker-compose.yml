@@ -17,6 +17,9 @@ services:
       - PGPORT=5433
     depends_on:
       - db
+    profiles:
+      - all
+      - app
     command: >
       sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
@@ -32,6 +35,9 @@ services:
       - "5433"
     ports:
       - "5433:5433"
+    profiles:
+      - all
+      - db
     command: -p 5433
 
 volumes:
