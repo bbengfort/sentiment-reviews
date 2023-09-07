@@ -10,11 +10,11 @@ services:
       - .:/app
     environment:
       - SECRET_KEY="9d#y46+z9*iwrwnpjs*(ynv8=c2oub1tt!(+syt6ga6u#esw1e"
-      - PGDATABASE=sentiment_reviews
-      - PGUSER=django
-      - PGPASSWORD=supersecretsquirrel
-      - PGHOST=db
-      - PGPORT=5433
+      - DATABASE_URL=postgresql://django:supersecretsquirrel@db:5433/sentiment_reviews
+      - ENSIGN_CLIENT_ID
+      - ENSIGN_CLIENT_SECRET
+      - ENSIGN_INSTANCES_TOPIC
+      - ENSIGN_INFERENCES_TOPIC
     depends_on:
       - db
     profiles:
@@ -39,6 +39,41 @@ services:
       - all
       - db
     command: -p 5433
+
+  predict:
+    build:
+      context: .
+    environment:
+      - ENSIGN_CLIENT_ID
+      - ENSIGN_CLIENT_SECRET
+      - ENSIGN_INSTANCES_TOPIC
+      - ENSIGN_INFERENCES_TOPIC
+    depends_on:
+      - db
+      - app
+    profiles:
+      - all
+      - ensign
+    command: >
+      sh -c "python sentiment.py predict"
+
+  sink:
+    build:
+      context: .
+    environment:
+      - DATABASE_URL=postgresql://django:supersecretsquirrel@db:5433/sentiment_reviews
+      - ENSIGN_CLIENT_ID
+      - ENSIGN_CLIENT_SECRET
+      - ENSIGN_INSTANCES_TOPIC
+      - ENSIGN_INFERENCES_TOPIC
+    depends_on:
+      - db
+      - app
+    profiles:
+      - all
+      - ensign
+    command: >
+      sh -c "python sentiment.py sink"
 
 volumes:
   pgdata:

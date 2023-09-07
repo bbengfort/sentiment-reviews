@@ -1,4 +1,7 @@
+import json
+
 from django.db import models
+from pyensign.events import Event
 from django.utils.translation import gettext_lazy as _
 
 
@@ -45,3 +48,18 @@ class Review(models.Model):
     def __str__(self):
         return self.text
 
+    def event(self):
+        data = {
+            "id": self.id,
+            "text": self.text,
+            "created": self.created.isoformat(),
+            "modified": self.modified.isoformat(),
+        }
+
+        return Event(
+            data=json.dumps(data).encode("utf-8"),
+            mimetype="application/json",
+            schema_name="Instance",
+            schema_version="1.0.0",
+            meta={"review_id": str(self.id)}
+        )

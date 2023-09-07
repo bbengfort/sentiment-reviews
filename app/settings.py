@@ -15,7 +15,9 @@ import environ
 from pathlib import Path
 
 env = environ.Env(
-    DEBUG=(bool, True)
+    DEBUG=(bool, True),
+    ENSIGN_INSTANCES_TOPIC=(str, "instances"),
+    ENSIGN_INFERENCES_TOPIC=(str, "inferences"),
 )
 
 
@@ -34,6 +36,13 @@ DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = []
 
+# Ensign configuration: warning keep these credentials secret!
+ENSIGN = {
+    "CLIENT_ID": env("ENSIGN_CLIENT_ID"),
+    "CLIENT_SECRET": env("ENSIGN_CLIENT_SECRET"),
+    "INSTANCES_TOPIC": env("ENSIGN_INSTANCES_TOPIC"),
+    "INFERENCES_TOPIC": env("ENSIGN_INFERENCES_TOPIC"),
+}
 
 # Application definition
 
@@ -83,14 +92,7 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('PGDATABASE'),
-        'USER': env('PGUSER'),
-        'PASSWORD': env('PGPASSWORD'),
-        'HOST': env('PGHOST'),
-        'PORT': env('PGPORT'),
-    }
+    'default': env.db(),
 }
 
 
@@ -123,7 +125,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

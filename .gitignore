@@ -161,3 +161,4 @@ cython_debug/
 
 fixtures/*
 !fixtures/model.pickle
+.secret

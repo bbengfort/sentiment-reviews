@@ -2,6 +2,17 @@
 
 **Code for the MLOps 201: Real Time Inferencing Webinar**
 
+## Prerequisites
+
+Before you start, you'll need to crete an account or login to [rotational.app](https://rotational.app). Create a project called "MLOps Tutorials", then create two topics in the project:
+
+- `instances`: publish instances that need to have the model applied to them
+- `inferences`: publish the class and confidence of the models' prediction on each instance
+
+Then create a set of API keys with Full permissions; make sure to download the keys file; the API key secret is only available during this step!
+
+Copy `.env.template` to `.env` in your local repository, then fill in the missing environment variables with the client keys you downloaded; now you're ready to start docker compose to run the various processes in the project.
+
 ## Quickstart
 
 To run the code locally on your computer, first make sure that [Docker and Docker Compose are installed](https://docs.docker.com/compose/install/). Then run the following commands from the root of the repository that you've cloned to your computer:
