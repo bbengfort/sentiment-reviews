@@ -18,8 +18,8 @@ Copy `.env.template` to `.env` in your local repository, then fill in the missin
 To run the code locally on your computer, first make sure that [Docker and Docker Compose are installed](https://docs.docker.com/compose/install/). Then run the following commands from the root of the repository that you've cloned to your computer:
 
 ```
-$ docker compose build
-$ docker compose up
+$ docker compose --profile all build
+$ docker compose --profile all up
 ```
 
 You should now be able to navigate to http://localhost:8000/ and see the app running.
