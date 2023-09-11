@@ -34,6 +34,7 @@ async def connect():
 
     return client
 
+
 @async_to_sync
 async def publish_review(review):
     client = Ensign(
@@ -45,10 +46,7 @@ async def publish_review(review):
 
     try:
         async with asyncio.timeout(5):
-            await client.publish(INSTANCES, event, on_ack=on_ack, on_nack=on_ack)
+            await client.publish(INSTANCES, event)
+            _ = await event.wait_for_ack()
     except TimeoutError:
         print("canceled publish task")
-
-
-async def on_ack(ack):
-    print(ack)

@@ -18,6 +18,8 @@ RUN pip install -r /requirements.txt
 USER root
 RUN apt-get clean autoclean
 RUN apt-get autoremove --yes
+
 USER django
 
 COPY ./ ./
+RUN ln -s /home/django/app/text/nltk_data /home/django/nltk_data

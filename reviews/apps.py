@@ -7,6 +7,5 @@ class ReviewsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'reviews'
 
-    # def ready(self):
-    #     ensign_connect()
-    #     import reviews.signals # noqa
+    def ready(self):
+        import reviews.signals # noqa
