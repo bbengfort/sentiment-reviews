@@ -67,13 +67,13 @@ async def predict(args):
         # Load the instance data and prepare to make a prediction
         instance = json.loads(event.data)
         inference = {
-            "id": instance.id,
+            "id": instance['id'],
             "features": None,
         }
 
         # Make the polarity inference and compute the confidence
-        inference["polarity"] = model.predict([instance.text])
-        inference["confidence"] = max(model.decision_function([instance.text]))
+        inference["polarity"] = model.predict([instance['text']])[0]
+        inference["confidence"] = model.decision_function([instance['text']]).max()
 
         # Create the inference event to publish
         out = Event(
@@ -81,19 +81,19 @@ async def predict(args):
             mimetype="application/json",
             schema_name="Inference",
             schema_version="1.0.0",
-            meta={"review_id": str(instance.id)}
+            meta={"review_id": str(instance['id'])}
         )
 
         # Publish the out event and ack the incoming event
         await client.publish(inferences, out)
         await event.ack()
-        print(f"pridction on review {instance.id} complete")
+        print(f"prediction on review {instance['id']} complete")
 
 
 UPDATE = (
     "UPDATE reviews SET "
-    "polarity=%(polarity)s "
-    "confidence=%(confidence)s "
+    "polarity=%(polarity)s, "
+    "confidence=%(confidence)s, "
     "features=%(features)s "
     "WHERE id=%(id)s;"
 )
@@ -113,8 +113,8 @@ async def sink(args):
     async for event in client.subscribe(inferences):
         data = json.loads(event.data)
         with pg.cursor() as cur:
-            cur.execute(UPDATE, **data)
-            cur.commit()
+            cur.execute(UPDATE, data)
+            pg.commit()
 
         await event.ack()
         print(f"review {data['id']} updated")

@@ -6,6 +6,7 @@ import asyncio
 import argparse
 import psycopg2
 
+from datetime import datetime
 from pyensign.events import Event
 from pyensign.ensign import Ensign
 
@@ -42,6 +43,8 @@ async def main(args):
     )
 
     await client.publish(env("ENSIGN_INSTANCES_TOPIC"), event)
+    ack = await event.wait_for_ack()
+    print(ack)
 
 
 if __name__ == "__main__":
