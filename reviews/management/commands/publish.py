@@ -29,7 +29,7 @@ class Command(BaseCommand):
         )
 
 @async_to_sync
-async def publish(reviews):
+async def publish(events):
     client = Ensign(
         client_id=settings.ENSIGN['CLIENT_ID'],
         client_secret=settings.ENSIGN['CLIENT_SECRET'],
@@ -37,8 +37,10 @@ async def publish(reviews):
 
     instances = settings.ENSIGN["INSTANCES_TOPIC"]
 
-        # Get the status from the ensign server
+    # Get the status from the ensign server
     _, version, _, _, _ = await client.client.status()
     print(f"sucessfully connected to Ensign version {version}")
 
-    await client.publish(instances, *reviews)
+    for event in events:
+        await client.publish(instances, event)
+        _ = await event.wait_for_ack()
